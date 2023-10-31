@@ -1,0 +1,47 @@
+{% extends "blog/base.html" %}
+
+{% block content  %}
+<div class="d-flex flex-column d-flex justify-content-center align-items-center p-5 ">
+    <form method="post" class="d-flex flex-column d-flex justify-content-center align-items-left">
+        {% csrf_token %}
+        <label for="title"><strong>Title: </strong></label>
+        <input type="text" name="title" class="form-control  my-3" placeholder="Enter the post title">
+    
+        <label for="content"><strong>content: </strong></label>
+        <textarea name="content" cols="80" rows="10" class="my-3"></textarea>
+    
+        <label for="status">Status: </label>
+        <select name="status" class="btn btn-secondary dropdown-toggle px-3 py-2">
+            <option value="PB">Published </option>
+            <option value="DF">Draft</option>
+        </select>
+
+        <label for="categories">Categories: </label>
+        <select name="categories" class="btn btn-secondary dropdown-toggle px-3 py-2">
+            {% for category in categories %}
+                <option value="{{category.name}}">{{category.name}}</option>
+            {% endfor %}
+        </select>
+
+
+        
+        <div class="form-group">
+            <label for="select">Tags:</label>
+            <select multiple class="form-control" id="select" name="tags">
+            {% for tag in tags %}
+                <option>{{ tag.name }}</option>
+            {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-info my-3 px-4">
+            <i class="bx bx-save"></i> Save
+        </button>
+
+    </form>
+    <h4><a class="btn btn-outline-primary" href="{% url 'blog:post_list' %}">Tab to see Published Posts</a></h4>
+    </div>
+    
+{% endblock content %}
+
+Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero aperiam, impedit deleniti magni veritatis autem eos, laboriosam magnam commodi praesentium eligendi quas ipsum eum corporis pariatur ab iusto voluptate cupiditate!

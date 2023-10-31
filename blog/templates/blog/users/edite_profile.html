@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edite profile{% endblock %}
+
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center my-5">
+    <div>
+        <h2>Edit User Profile</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="firstname">First name</label>
+            <input type="text" name="firstname" id="firstname" class="form-control">
+
+            <label for="lastname">Last name</label>
+            <input type="text" name="lastname" id="lastname" class="form-control">
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control">
+
+            {{ form|crispy }}
+            <button class="btn btn-md btn-success" type="submit">Update Info</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,167 @@
+{% extends "blog/base.html" %}
+{% block title %}Profile{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+    
+
+
+    <div class="container">  
+        <div class="card border-dark mb-3 mx-5 mt-4 ">
+        <div class="card-header bg-transparent border-dark fs-4" >{{user.username}}'s profile</div>
+            <div class="card-body ">
+                <!-- check username-->
+                {% if user.username %}
+                    <p class="card-text">User_name : {{user.username}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>username</b> is not provided by user.
+                    </div>
+                {% endif %}
+                <!-- check first name-->
+                {% if user.first_name %}
+                    <p class="card-text">First Name : {{user.first_name}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>First name</b> is not provided by user.
+                    </div>
+                {% endif %}
+                <!-- check last name-->
+                {% if user.last_name%}
+                    <p class="card-text">Last Name : {{user.last_name}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>Last Name</b> is not provided by user.
+                    </div>
+                {% endif %}
+                <!-- check email-->
+                {% if user.email%}
+                    <p class="card-text">Email : {{user.email}} </p>
+                {% else%}
+                    <div class="alert alert-warning" role="alert">
+                        <b>Email</b> is not provided by user.
+                    </div>
+                {% endif %}
+
+                {% if profile.image %}
+                    <p><strong>Profile image</strong></p>
+                    <img src="{{ profile.image.url }}" alt="Profile Image" style="width: 20%;">
+                {% endif %}
+
+                {% if profile.badge %}
+                <p><strong>Badge</strong></p>
+                    <img src="{{ profile.badge.url }}" alt="Profile Image" style="width: 10%;">
+                {% endif %}
+
+                {% if profile.link1 %}
+                <p class="mt-4"><strong>Social Link:</strong></p>
+                    <p> {{profile.link1}} </p>
+                {% endif %}
+
+                {% if profile.link2 %}
+                <p><strong>Other Social Link:</strong></p>
+                    <p> {{profile.link2}} </p>
+                {% endif %}
+    
+            </div>
+            <div class="card-footer bg-transparent border-dark">
+                <a class="btn btn-md btn-success ml-4" href="{% url 'blog:edit_profile' user.id %}">Edit Account</a>
+                <a class="btn btn-md btn-primary ml-4" href="{% url 'blog:change_pass' %}">change password</a>
+                <a class="btn btn-md btn-danger ml-4" href="{% url 'blog:accountdelete' user %}">Delete Account</a>
+            </div>
+        </div>
+    
+        <hr>
+
+        {% if admin_in_companies %}
+        <h3 class="mx-5">You are Admin in:</h3>
+        <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+            <div class="card mx-5 mb-5 p-3">
+                
+                <ul class="list-group">
+                    {% for company in admin_in_companies %}
+                    <li class="list-group-item"> {{ forloop.counter }}- {{ company.company_name }} </li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+        </div>
+        {% endif %}
+
+        {% if writer_in_companies %}
+        <h3 class="mx-5">You are writer in:</h3>
+        <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+            <div class="card mx-5 mb-5 p-3">
+                
+                <ul class="list-group">
+                    {% for company in writer_in_companies %}
+                    <li class="list-group-item"> {{ forloop.counter }}- {{ company.company_name }} </li>
+                    {% endfor %}
+                </ul>
+                
+            </div>
+        </div>
+        {% endif %}
+
+        
+
+    
+        <div class="card border-dark mb-3 mx-5 mt-4 ">
+            <div class="card-header bg-transparent border-dark fs-4" >My Posts</div>
+            <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+                <a class="btn btn-outline-info {% if current_state == 'published' %}active{% endif %}" href="?status=published">
+                    Published
+                </a>
+                <a class="btn btn-outline-info {% if current_state == 'draft' %}active{% endif %}" href="?status=draft">
+                    Drafts
+                </a>
+            </div>
+                    <div class="card-body ">
+                        <div class="row">
+                            {% for post_data in posts %}
+                            <div class="col-md-6 {% if post_data.statue == 'published' %}published{% endif %}">
+                                <div class="card mx-4 mb-3">
+                                <div class="card-body mx-3">
+                                    <div class="row">
+                                    <div class="col-md-6">
+                                        <p>{{ post_data.title }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="text-end">{{ post_data.publish_date }}</p>
+                                    </div>
+                                    </div>
+                                    <footer class="blockquote-footer">{{ post_data.content | truncatechars_html:20 }}</footer>
+                                </div>
+                                <div class="card-footer">
+                                    <a class="btn btn-md btn-info ml-4" href="{{post_data.get_absolute_url}}">Read More</a>
+                                    <a class="btn btn-md btn-primary ml-4" href="">Edit Post</a>
+                                    <a class="btn btn-md btn-danger ml-4" href="">Delete Post</a>
+                                </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+            
+            
+
+        
+    
+
+    </div>
+    <script>
+        // JavaScript to handle switching between Posts and Drafts
+        document.getElementById('published').addEventListener('click' , function(){
+            window.location.replace("{% url 'blog:profile' user %}?status=published")
+        }) 
+        document.getElementById('draft').addEventListener('click' , function(){
+            window.location.replace("{% url 'blog:profile' user %}?status=draft")
+        })
+        </script>
+
+{% endblock %}

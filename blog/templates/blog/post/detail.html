@@ -1,0 +1,66 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %} {{post.title}} {% endblock %}
+
+{% block content %}
+
+        <!-- News With Sidebar Start -->
+        <div class="container-fluid py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- News Detail Start -->
+                        <div class="position-relative mb-3">
+                            <img class="img-fluid w-100" src="{% static 'img/news-700x435-2.jpg' %}" style="object-fit: cover;">
+                            <div class="overlay position-relative bg-light">
+                                <div class="mb-3">
+                                    <a href="">{{post.category}}</a>
+                                    <span class="px-1">/</span>
+                                    <span>{{post.publish}}</span>
+                                </div>
+                                <div>
+                                    <h3 class="mb-3">{{post.title}}</h3>
+                                    <p>{{post.body}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- News Detail End -->
+    
+                        <!-- Comment List Start -->
+                        <div class="bg-light mb-3" style="padding: 30px;">
+                            {% with comments.count as total_comments %}
+                            <h3 class="mb-4">{{ total_comments }} comment{{ total_comments|pluralize }}</h3>
+                            {% endwith %}
+
+                            {% for comment in comments %}
+                                <div class="media mb-4">
+                                    <img src="{% static 'img/user.png' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    <div class="media-body">
+                                        <h6><a href="">{{comment.name}}</a> <small><i>{{comment.created}}</i></small></h6>
+                                        <p>{{comment.body}}</p>
+                                    </div>
+                                </div>
+                            {% empty %}
+                            <p>There are no comments</p>
+                            {% endfor %}
+                        </div>
+                        <!-- Comment List End -->
+                        {% include "blog/post/includes/comment_form.html" %}
+                        <!-- Comment Form Start -->
+                        
+                        <!-- Comment Form End -->
+                        {% include "blog/post/includes/similar_posts.html" %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- News With Sidebar End -->
+
+        
+
+
+
+{% endblock %}

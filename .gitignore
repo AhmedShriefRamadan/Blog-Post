@@ -1,0 +1,9 @@
+*.sqlite3
+notes.txt
+/static/**
+!/static
+db.sqlite3
+__pycache__
+*/migrations/**
+!*/migrations
+!*/migrations/__init__.py

@@ -1,0 +1,185 @@
+{% load static %}
+{% load blog_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">   
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <script src="{%static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/infinite.min.js' %}"></script>
+
+</head>
+<body>
+    
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row align-items-center bg-light px-lg-5">
+            <div class="col-12 col-md-8">
+                <div class="d-flex justify-content-between d-flex">
+                    <div class="bg-primary text-white text-center py-2" style="width: 100px;">Tranding</div>
+                    <div class="owl-carousel owl-carousel-1 tranding-carousel position-relative d-inline-flex align-items-center ml-3" style="width: calc(100% - 100px); padding-left: 90px;">
+                        {% get_most_commented_posts as trand_posts %}
+                        {% for post in trand_posts %}
+                            <div class="text-truncate"><a class="text-secondary" href="{{ post.get_absolute_url }}">{{ post.title }}</a></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row align-items-center py-2 px-lg-5">
+            <div class="col-lg-4">
+                <a href="{% url 'blog:post_list' %}" class="navbar-brand d-none d-lg-block">
+                    <h1 class="m-0 display-5 text-uppercase"><span class="text-primary">News</span>Room</h1>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 mb-3">
+        <nav class="navbar navbar-expand-lg bg-light navbar-light py-2 py-lg-0 px-lg-5">
+            
+            <a href="" class="navbar-brand d-block d-lg-none">
+                <h1 class="m-0 display-5 text-uppercase"><span class="text-primary">News</span>Room</h1>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between px-0 px-lg-3 col-sm-12 d-md-block" id="navbarCollapse">
+                
+                <div class="navbar-nav mr-auto py-0">
+                    <a href="{% url 'blog:post_list' %}" class="nav-item nav-link active">Home</a>
+                    <a href="{% url 'blog:categories_list' %}" class="nav-item nav-link">Categories</a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'blog:login' %}" class="nav-item nav-link">Login</a>
+
+                    <a href="{% url 'blog:register' %}" class="nav-item nav-link">Register</a>
+                    {% else %}
+                    <a href="{% url 'blog:profile' user %}" class="nav-item nav-link bg-success text-light fs-2"><strong>{{user|capfirst}}</strong></a>
+
+                    <a href="{% url 'blog:logout' %}" class="nav-item nav-link bg-danger text-light fs-2 mx-2"><strong>Log-out</strong></a>
+
+                    {% endif %}
+
+                    <a href="{% url 'blog:post_add' %}" class="nav-item nav-link">Add Post</a>
+
+                    <script>
+                        function display(){
+                            document.getElementById('add').style.display= 'flex';
+                        }
+                    </script>
+
+                    <button class="btn" onclick="display()">Add Tag</button>
+
+                    <form action="{% url 'blog:add_tag' %}" method="get" id="add" style="display: none;" class="ml-2 mt-2 p-1">
+                        <input type="text" name="tag" placeholder="Name" class="form-control">
+
+                        <button type="submit" class="btn btn-primary " >Submit</button>
+                    </form>
+                </div>
+                
+                    
+                        {% block search %}
+                        {% endblock %}
+            
+                
+            </div>
+        </nav>
+
+        
+
+    </div>
+    <!-- Navbar End -->
+
+
+    {% block content %}
+    {% endblock %}
+
+
+
+
+
+    <a href="#" class="btn btn-dark back-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-light pt-5 px-sm-3 px-md-5">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-5">
+                <a href="index.html" class="navbar-brand">
+                    <h1 class="mb-2 mt-n2 display-5 text-uppercase"><span class="text-primary">News</span>Room</h1>
+                </a>
+                <p>Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed kasd et</p>
+                <div class="d-flex justify-content-start mt-4">
+                    <a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-secondary text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-5">
+                <h4 class="font-weight-bold mb-4">Categories</h4>
+                <div class="d-flex flex-wrap m-n1">
+                    {% show_all_categories as categories %}
+                    {% for category in categories %}
+                        <a href="{{category.get_absolute_url}}" class="btn btn-sm btn-outline-secondary m-1">{{category.name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-5">
+                <h4 class="font-weight-bold mb-4">Tags</h4>
+                <div class="d-flex flex-wrap m-n1">
+                    {% show_all_tags as tags %}
+                    {% for tag in tags %}
+                        <a href="{% url 'blog:post_list_by_tag' tag.slug %}" class="btn btn-sm btn-outline-secondary m-1">{{tag.name}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4 px-sm-3 px-md-5">
+        <p class="m-0 text-center">
+            &copy; <a class="font-weight-bold" href="#">Blog Post</a>. All Rights Reserved. 
+        </p>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

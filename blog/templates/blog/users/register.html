@@ -1,0 +1,62 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+<script>
+    window.location.replace("{% url 'blog:profile' request.user %}")
+</script>
+{% else %}
+<div class="row">
+<div class="col-11 col-md-4 mx-auto mt-5">
+    <div class="btn-group btn-group-toggle mb-3 mx-5 mt-4" data-toggle="buttons">
+        <button class="btn btn-outline-primary {% if status == 'user' or status == None %}active{% endif %}" id = "user">
+            User
+        </button>
+        <button class="btn btn-outline-primary {% if status == 'company' %}active{% endif %}"  id = "company">
+            Company
+        </button>
+    </div>
+    <h1 class="text-primary">Sign UP</h1>
+
+    <form method="post" id = "form" >
+        <input type="hidden"  value = "{{status}}" name = data >
+        {{form | crispy}}
+        {% if status == 'company' %}
+        <label for="admin">Company Admin*</label>
+        <input type="text" id="admin" name="admin" placeholder="Username" class="form-control mb-3">
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Sign Up</button>
+        {% csrf_token %}
+    </form>
+    <div class="my-4">
+        <small>All ready have an account? <a href="{% url 'blog:login' %}" class="ml-2">Sign in</a></small>
+    </div>
+</div> 
+</div>
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$('#user').click(function(){
+    window.location.replace("{%url 'blog:register'%}?status=user")
+})
+$('#company').click(function(){
+    window.location.replace("{%url 'blog:register'%}?status=company")
+})
+
+$('#form').submit(function(event){
+    event.preventDefault()
+    let formData = $(this).serialize() 
+    $.ajax({
+        url : "{% url 'blog:register' %}" ,
+        method : 'POST' ,
+        data : formData ,
+        success : function (res) {
+            window.location.reload()
+        } , 
+    })
+})
+
+</script>
+{% endblock content%}

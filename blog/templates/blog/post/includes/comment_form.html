@@ -1,0 +1,12 @@
+<table style="width: 100%;">
+    <div class="bg-light mb-3" style="padding: 30px;">
+        <h3 class="mb-4">Leave a comment</h3>
+        <form action="{% url 'blog:post_comment' post.id %}" method="post">
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            {% csrf_token %}
+            <p><input type="submit" value="Add comment"></p>
+        </form>
+    </div>
+</table>

@@ -1,0 +1,181 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}My Blog{% endblock %}
+
+{% block search %}
+    <form method="get" >
+    <div class="input-group ml-auto d-flex justify-content-between pt-3" style="width: 100%; max-width: 300px;">
+        {{ form.as_p }}
+        <button class="input-group-text text-secondary h-50 d-inline-block"><i
+                class="fa fa-search"></i></button>
+    </div>
+</form>
+{% endblock %}
+
+{% block content %}
+    
+
+        <!-- Top News Slider Start -->
+    <div class="container-fluid py-3">
+        <div class="container">
+            <div class="owl-carousel owl-carousel-2 carousel-item-3 position-relative">
+
+                {% display_latest_posts as latest_posts %}
+                {% for post in latest_posts %}
+                    <div class="d-flex">
+                        <img src="{% static 'img/news-100x100-1.jpg' %}" style="width: 80px; height: 80px; object-fit: cover;">
+
+                        <div class="d-flex align-items-center bg-light px-3" style="height: 80px;">
+                            <a class="text-secondary font-weight-semi-bold" href="{{ post.get_absolute_url }}">{{ post.title }} <br> {{ post.body|markdown|truncatewords_html:1 }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+        <!-- Top News Slider End -->
+
+{% if not tag %}
+            <!-- Main News Slider Start -->
+    <div class="container-fluid py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center justify-content-between bg-light py-2 px-4 mb-3">
+                        <h2>Recommended Posts</h2>
+                    </div>
+                    
+
+                    <div class="owl-carousel owl-carousel-2 carousel-item-1 position-relative mb-3 mb-lg-0">
+
+                        {% for post in latest_posts %}
+                        <div class="position-relative overflow-hidden" style="height: 435px;">
+                            <img class="img-fluid h-100" src="{% static 'img/news-700x435-1.jpg' %}" style="object-fit: cover;">
+                            <div class="overlay">
+                                <div class="mb-1">
+                                    <a class="text-white" href="">Technology</a>
+                                    <span class="px-2 text-white">/</span>
+                                    <a class="text-white" href="">{{ post.publish }}</a>
+                                </div>
+                                <a class="h2 m-0 text-white font-weight-bold" href="{{ post.get_absolute_url }}">{{ post.body|markdown|truncatewords_html:6 }}</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                    <div class="col-lg-4">
+                        <div class="d-flex align-items-center justify-content-between bg-light py-2 px-4 mb-3">
+                            <h3 class="m-0">Categories</h3>
+                            <a class="text-secondary font-weight-medium text-decoration-none" href="{% url 'blog:categories_list' %}">View All</a>
+                        </div>
+
+                        {% show_categories as categories %}
+                        {% for category in categories %}
+                            <div class="position-relative overflow-hidden mb-3" style="height: 80px;">
+                                {% if category %}
+                                <img class="img-fluid w-100 h-100" src="{{ category.image.url }}" style="object-fit: cover;">
+                                {% else %}
+                                <h3>This Category has no image</h3>
+                                {% endif %}
+                                <a href="{{ category.get_absolute_url }}" class="overlay align-items-center justify-content-center h4 m-0 text-white text-decoration-none">
+                                    {{ category.name }}
+                                </a>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main News Slider End -->
+{% endif %}
+
+
+            <!-- News With Sidebar Start -->
+    <div class="container-fluid py-3">
+        <div class="container infinite-container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-between bg-light py-2 px-4 mb-3">
+                                {% if tag %}
+                                    <h3 class="m-0">Posts tagged with "{{ tag.name }}"</h3>
+                                {% else %}
+                                    <h3 class="m-0">Published Posts</h3>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="infinite-item">
+                        {% for post in posts %}
+                            <div class="col-lg-12">
+                                <div class="position-relative mb-3">
+                                    <img class="img-fluid w-100" src="{% static 'img/news-500x280-2.jpg' %}" style="object-fit: cover;">
+                                    <div class="overlay position-relative bg-light">
+                                        <div class="mb-2" style="font-size: 14px;">
+                                            <a href="{{post.category.get_absolute_url}}">{{post.category}}</a>
+                                            <span class="px-1">/</span>
+                                            <span>{{post.publish}}</span>
+                                        </div>
+                                        <a class="h4" href="{{post.get_absolute_url}}">{{post.title}}</a>
+                                        <p class="m-0">{{post.body}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+
+                </div>
+                
+                <div class="col-lg-4 pt-3 pt-lg-0">
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- News With Sidebar End -->
+
+
+
+
+    {% if posts.has_next %}
+    <a class="infinite-more-link" href="?page={{ posts.next_page_number }}">More</a>
+    {% endif %}
+    <div class="d-flex justify-content-center" style="display:none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+
+<script>
+var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+    handler: function(direction) {
+
+    },
+    offset: 'bottom-in-view',
+
+    onBeforePageLoad: function () {
+    $('.spinner-border').show();
+    },
+    onAfterPageLoad: function () {
+    $('.spinner-border').hide();
+    }
+
+});
+
+</script>
+{% endblock %}

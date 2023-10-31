@@ -1,0 +1,66 @@
+{% extends "blog/base.html" %}
+{% load blog_tags %}
+{% load static %}
+
+{% block title %}Category{% endblock %}
+
+{% block content %}
+
+{% if check %}
+<!-- Form enctype Attribute: Ensure that your HTML form has the enctype attribute set to "multipart/form-data". This attribute is required for forms that handle file uploads. Without it, uploaded files won't be included in request.FILES. -->
+<div class="container-fluid" style="margin: auto;">
+    <div class="row w-50 d-felx flex-column align-items-center">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+</div>
+
+{% else %}
+    <div class="container-fluid py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-between bg-light py-2 px-4 mb-3">
+                                <h3 class="m-0">Categories</h3>
+
+                                <form method="get">
+                                
+                                <input type="text" name="category" value="add" hidden>
+                                <button type="submit" value="add" class="btn btn-primary">Add Category</button>
+
+                                </form>
+                            </div>
+                        </div>
+
+
+                        {% for category in categories %}
+                        <div class="col-lg-6 d-felx">
+                            <div class="position-relative mb-3">
+                                {% if category.image %}
+                                <img class="img-fluid w-100 h-50" src="{{ category.image.url }} " style="object-fit: cover;">
+                                {% else %}
+                                <h3>This Category has no image</h3>
+                                {% endif %}
+                                
+                                <div class="overlay position-relative bg-light">
+                                    <a class="h4" href="{{ category.get_absolute_url }}" >{{ category.name }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+{% endblock %}
